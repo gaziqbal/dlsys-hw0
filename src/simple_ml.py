@@ -112,9 +112,6 @@ def softmax_loss(Z, y):
 
     return softmax
 
-    # Z.shape = batch_size, num_classes
-    # y.shape = batch_size
-
     # END YOUR CODE
 
 
@@ -137,7 +134,28 @@ def softmax_regression_epoch(X, y, theta, lr=0.1, batch=100):
         None
     """
     # BEGIN YOUR CODE
-    pass
+
+    num_classes = theta.shape[1]
+    num_examples = X.shape[0]
+
+    for i in range(0, num_examples, batch):
+        # Batch
+        x_batch = X[i:i+batch]
+        y_batch = y[i:i+batch]
+        batch_size = y_batch.shape[0]
+
+        # One hot encoding (batch_size x num_classes)
+        I = np.zeros((batch_size, num_classes))
+        I[np.arange(batch_size), y_batch] = 1
+
+        # Softmax probabilities (batch_size x num_classes)
+        Z = np.exp(x_batch @ theta)
+        Z_sum = np.reshape(np.sum(Z, axis=1), (Z.shape[0], 1))
+        Z_norm = Z / Z_sum
+
+        gradient = x_batch.T @ (Z_norm - I)
+        theta -= (lr / batch) * gradient
+
     # END YOUR CODE
 
 
