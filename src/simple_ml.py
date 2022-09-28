@@ -151,9 +151,13 @@ def softmax_regression_epoch(X, y, theta, lr=0.1, batch=100):
         # Softmax probabilities (batch_size x num_classes)
         Z = np.exp(x_batch @ theta)
         Z_sum = np.reshape(np.sum(Z, axis=1), (Z.shape[0], 1))
+        print(f"Z_sum: {Z_sum.shape}")
         Z_norm = Z / Z_sum
 
+        # Gradient given the input batch, one-hot labels and softmax
         gradient = x_batch.T @ (Z_norm - I)
+
+        # Apply learning rate to the batch
         theta -= (lr / batch) * gradient
 
     # END YOUR CODE
@@ -182,7 +186,44 @@ def nn_epoch(X, y, W1, W2, lr=0.1, batch=100):
         None
     """
     # BEGIN YOUR CODE
-    pass
+
+    # Gradient is derivative of L cross-entropy (Sigma(XW1)W2, y) with respect to W1 and W2.
+
+    num_examples = X.shape[0]
+    num_classes = W2.shape[1]
+
+    for i in range(0, num_examples, batch):
+        # Batch
+        X_batch = X[i:i+batch]
+        Y_batch = y[i:i+batch]
+        batch_size = Y_batch.shape[0]
+
+        # One hot encoding (batch_size x num_classes)
+        I = np.zeros((batch_size, num_classes))
+        I[np.arange(batch_size), Y_batch] = 1
+
+        # Z
+        Z = X_batch @ W1
+        Z[Z < 0] = 0  # ReLu
+
+        # G2
+        G2 = np.exp(Z @ W2)
+        G2_sum = np.reshape(np.sum(G2, axis=1), (-1, 1))
+        G2 = (G2 / G2_sum) - I  # normalize
+
+        # G1
+        G1 = G2 @ W2.T
+        Z1 = np.copy(Z)
+        Z1[Z1 != 0] = 1  # 1 when positive, 0 otherwise
+        G1 = np.multiply(Z1, G1)
+
+        # Gradients
+        W1_gradient = (X_batch.T @ G1) / batch
+        W2_gradient = (Z.T @ G2) / batch
+
+        W1 -= (lr) * W1_gradient
+        W2 -= (lr) * W2_gradient
+
     # END YOUR CODE
 
 
