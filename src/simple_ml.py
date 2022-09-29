@@ -149,10 +149,10 @@ def softmax_regression_epoch(X, y, theta, lr=0.1, batch=100):
         I[np.arange(batch_size), y_batch] = 1
 
         # Softmax probabilities (batch_size x num_classes)
-        Z = np.exp(x_batch @ theta)
-        Z_sum = np.reshape(np.sum(Z, axis=1), (Z.shape[0], 1))
-        print(f"Z_sum: {Z_sum.shape}")
-        Z_norm = Z / Z_sum
+        Z = x_batch @ theta
+        Z_exp = np.exp(Z)
+        Z_sum = np.reshape(np.sum(Z_exp, axis=1), (Z_exp.shape[0], 1))
+        Z_norm = Z_exp / Z_sum
 
         # Gradient given the input batch, one-hot labels and softmax
         gradient = x_batch.T @ (Z_norm - I)

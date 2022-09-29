@@ -1,8 +1,11 @@
 {
     "python.testing.pytestArgs": [
-        "-s", "tests"
+        "-s",
+        "tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "editor.formatOnSave": true
+    "python.sortImports.args": [],
+    "python.analysis.autoImportCompletions": false,
+    "python.formatting.provider": "none",
 }
