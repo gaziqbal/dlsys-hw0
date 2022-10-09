@@ -1,9 +1,13 @@
-import numpy as np
+import os
 import sys
-import numdifftools as nd
-sys.path.append("./src")
+
 import mugrade
+import numdifftools as nd
+import numpy as np
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
 from simple_ml import *
+
 try:
     from simple_ml_ext import *
 except:
