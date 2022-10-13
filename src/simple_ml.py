@@ -106,6 +106,12 @@ def softmax_loss(Z, y):
     #     loss.append(l)
     # softmax = np.average(loss)
 
+    # Semi verbose
+    # zy = Z[np.arange(Z.shape[0]), y]
+    # zlog = np.log(np.sum(np.exp(Z), axis=1))
+    # zdiff = zlog - zy
+    # softmax = np.average(zdiff)
+
     # One liner
     softmax = np.average(np.log(np.sum(np.exp(Z), axis=1)
                                 ) - Z[np.arange(Z.shape[0]), y])
